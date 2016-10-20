@@ -15,8 +15,6 @@ import (
 	"time"
 )
 
-const DefaultTagCreator = "UATag.system"
-
 // SimpleChaincode -> simple Chaincode implementation
 type SimpleChaincode struct {
 }
@@ -184,7 +182,7 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 	if args[3] != "" {
 		_tag_Creator = args[3]
 	} else {
-		_tag_Creator = DefaultTagCreator
+		_tag_Creator = "UATag.system"
 	}
 
 	if len(args[4]) > 0 && len(args[5]) > 0 {
