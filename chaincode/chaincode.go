@@ -36,10 +36,8 @@ func main() {
 
 // Init resets all the things
 func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
-
-	_time := time.Now()
-
-	err := stub.PutState("init", []byte(_time))
+	_init_time := time.Now().String()
+	err := stub.PutState("hello_world", []byte(_init_time))
 	if err != nil {
 		return nil, err
 	}
