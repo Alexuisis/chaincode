@@ -36,12 +36,12 @@ func main() {
 
 // Init resets all the things
 func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+	// WE LOG CREATION DATE & TIME UPON INIT
 	_init_time := time.Now().String()
-	err := stub.PutState("hello_world", []byte(_init_time))
+	err := stub.PutState("system_created_time", []byte(_init_time))
 	if err != nil {
 		return nil, err
 	}
-	//sss
 	return nil, nil
 }
 
