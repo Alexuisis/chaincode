@@ -19,13 +19,15 @@ package main
 import (
 	"errors"
 	"fmt"
-
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	"time"
 )
 
 // SimpleChaincode example simple Chaincode implementation
 type SimpleChaincode struct {
 }
+
+// chaincode entry point
 
 func main() {
 	err := shim.Start(new(SimpleChaincode))
@@ -34,13 +36,12 @@ func main() {
 	}
 }
 
+// ok---
+
 // Init resets all the things
 func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
-	if len(args) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 1")
-	}
 
-	err := stub.PutState("hello_world", []byte(args[0]))
+	err := stub.PutState("init_date", []byte(time.now()))
 	if err != nil {
 		return nil, err
 	}
