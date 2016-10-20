@@ -93,7 +93,7 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 
 		valAsbytes, err := stub.GetState("already_inited") //get the var from chaincode state
 		if err != nil {
-			return nil, nil
+			return valAsbytes, nil
 		} else {
 			return t.Init(stub, function, args)
 		}
