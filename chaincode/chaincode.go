@@ -54,7 +54,7 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 	}
 
 	// Write the state to the ledger
-	err = stub.PutState("abc", []byte(strconv.Itoa(Aval))) //making a test var "abc", I find it handy to read/write to it right away to test the network
+	err = stub.PutState("already_inited", []byte(strconv.Itoa(Aval)))
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,14 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 
 	// Handle different functions
 	if function == "init" { //initialize the chaincode state, used as reset
-		return t.Init(stub, function, args)
+
+		valAsbytes, err := stub.GetState("already_inited") //get the var from chaincode state
+		if err != nil {
+			return nil, nil
+		} else {
+			return t.Init(stub, function, args)
+		}
+
 	} else if function == "create_tag" {
 		return t.create_tag(stub, args)
 	}
