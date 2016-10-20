@@ -89,15 +89,13 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
 
-	//stub.PutState("test", []byte("1"))
-
 	// Handle different functions
-	if function == "init" {
-		//return t.Init(stub, "init", args) // init here resets all data !
-		return t.read(stub, []string{"system_created_time"})
-	} else if function == "create_tag" {
-		return t.create_tag(stub, args)
+	if function == "init" { //initialize the chaincode state, used as reset
+		return t.init(stub, args)
+	} else if function == "write" {
+		return t.write(stub, args)
 	}
+
 	fmt.Println("invoke did not find func: " + function)
 
 	return nil, errors.New("Received unknown function invocation")
@@ -144,6 +142,13 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 	return valAsbytes, nil //send it onward
 }
 
+func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+	err = stub.PutState("abc", []byte("CBA!"))
+	if err != nil {
+		return nil, err
+	}
+}
+
 // ============================================================================================================================
 // 	ALL TAGS RELATES FUNCTIONS BELOW
 // ============================================================================================================================
@@ -159,8 +164,6 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 
 */
 func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-
-	stub.PutState("create_tag", []byte("111"))
 
 	var err error
 	if len(args) < 2 {
