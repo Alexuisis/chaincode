@@ -91,8 +91,6 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
 
-	return nil, errors.New("OPAAAA")
-
 	// Handle different functions
 	if function == "init" {
 		//return t.Init(stub, "init", args) // init here resets all data !
