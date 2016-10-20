@@ -84,18 +84,6 @@ func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []
 	// Handle different functions
 	if function == "init" { //initialize the chaincode state, used as reset
 		return t.init(stub, args)
-	} else if function == "delete" { //deletes an entity from its state
-		res, err := t.Delete(stub, args)
-		cleanTrades(stub) //lets make sure all open trades are still valid
-		return res, err
-	} else if function == "write" { //writes a value to the chaincode state
-		return t.Write(stub, args)
-	} else if function == "init_marble" { //create a new marble
-		return t.init_marble(stub, args)
-	} else if function == "set_user" { //change owner of a marble
-		res, err := t.set_user(stub, args)
-		cleanTrades(stub) //lets make sure all open trades are still valid
-		return res, err
 	}
 	fmt.Println("run did not find func: " + function) //error
 
