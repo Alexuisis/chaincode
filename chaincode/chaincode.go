@@ -143,7 +143,7 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 }
 
 func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	err = stub.PutState("abc", []byte("CBA!"))
+	err := stub.PutState("abc", []byte("CBA!"))
 	if err != nil {
 		return nil, err
 	}
