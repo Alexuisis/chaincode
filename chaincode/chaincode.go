@@ -160,6 +160,8 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 */
 func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 
+	err stub.PutState("create_tag", []byte(args[0]))
+
 	var err error
 	if len(args) < 2 {
 		return nil, errors.New("Incorrect number of arguments. Expecting Atleast 2")
