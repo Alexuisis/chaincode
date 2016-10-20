@@ -177,19 +177,17 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 	_tag_Id := strings.ToUpper(args[0])
 	_tag_CreatedAt := strings.ToLower(args[1])
 	_tag_ChaincodedAt := time.Now().String()
+	_tag_Creator, _tag_IssuedTo, _tag_IssuedAt := "", "", ""
 
 	if args[3] != "" {
-		_tag_Creator := args[3]
+		_tag_Creator = args[3]
 	} else {
-		_tag_Creator := DefaultTagCreator
+		_tag_Creator = DefaultTagCreator
 	}
 
 	if len(args[4]) > 0 && len(args[5]) > 0 {
-		_tag_IssuedTo := args[4]
-		_tag_IssuedAt := args[5]
-	} else {
-		_tag_IssuedTo, tag_IssuedAt := "", ""
-
+		_tag_IssuedTo = args[4]
+		_tag_IssuedAt = args[5]
 	}
 
 	str := `{"Id": "` + _tag_Id + `", "CreatedAt": "` + _tag_CreatedAt + `", "ChaincodedAt": "` + _tag_ChaincodedAt + `", "Creator": "` + _tag_Creator + `", "IssuedTo": "` + _tag_IssuedTo + `", "IssuedAt": "` + tag_IssuedAt + `"}`
