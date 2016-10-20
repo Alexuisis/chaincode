@@ -147,6 +147,7 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 	if err != nil {
 		return nil, err
 	}
+	return nil, nil
 }
 
 // ============================================================================================================================
