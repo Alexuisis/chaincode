@@ -100,7 +100,7 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 	if function == "read" { //read a variable
 		return t.read(stub, args)
 	} else if function == "system_created" {
-		return t.read(stub, "system_created_time")
+		return t.read(stub, []string{"system_created_time"})
 	}
 
 	fmt.Println("query did not find func: " + function) //error
