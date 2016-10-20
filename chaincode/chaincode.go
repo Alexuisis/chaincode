@@ -11,7 +11,6 @@ import (
 	"fmt"
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"strconv"
-	"strings"
 	"time"
 )
 
