@@ -65,7 +65,7 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 
 	// WE LOG CREATION DATE & TIME UPON INIT
 	_init_time := time.Now().String()
-	err := stub.PutState("system_created_time", []byte(_init_time))
+	err = stub.PutState("system_created_time", []byte(_init_time))
 	if err != nil {
 		return nil, err
 	}
