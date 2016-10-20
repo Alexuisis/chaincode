@@ -45,7 +45,7 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 	var err error
 
 	// Initialize the chaincode
-	Aval, err = strconv.Atoi(1)
+	Aval, err = strconv.Atoi("1")
 	if err != nil {
 		return nil, errors.New("Expecting integer value for asset holding")
 	}
