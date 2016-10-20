@@ -92,8 +92,8 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	// Handle different functions
 	if function == "init" { //initialize the chaincode state, used as reset
 		return t.Init(stub, function, args)
-	} else if function == "write" {
-		return t.write(stub, args)
+	} else if function == "create_tag" {
+		return t.create_tag(stub, args)
 	}
 
 	fmt.Println("invoke did not find func: " + function)
