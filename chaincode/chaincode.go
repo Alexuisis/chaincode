@@ -14,7 +14,7 @@ import (
 	"time"
 )
 
-// SimpleChaincode example simple Chaincode implementation
+// SimpleChaincode -> simple Chaincode implementation
 type SimpleChaincode struct {
 }
 
@@ -38,8 +38,8 @@ func main() {
 	}
 }
 
-// Init resets all the things
-func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+// INIT THE WHOLE NEW NETWORK CHAINCODE and test if writeable
+func (t *SimpleChaincode) init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 
 	var Aval int
 	var err error
@@ -56,6 +56,7 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 		return nil, err
 	}
 
+	// CLEAR AND CREATE NEW TAGS DATABASE
 	var empty []string
 	jsonAsBytes, _ := json.Marshal(empty) //marshal an emtpy array of strings to clear the index
 	err = stub.PutState(tagIndexStr, jsonAsBytes)
@@ -72,68 +73,70 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 	return nil, nil
 }
 
-// Invoke isur entry point to invoke a chaincode function
-func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
-	fmt.Println("invoke is running " + function)
+//// -------------------- OK
+
+// ============================================================================================================================
+// Run - Our entry point for Invokcations
+// ============================================================================================================================
+func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+	fmt.Println("run is running " + function)
 
 	// Handle different functions
-	if function == "init" {
-		return t.Init(stub, "init", args)
-	} else if function == "write" {
-		return t.write(stub, args)
+	if function == "init" { //initialize the chaincode state, used as reset
+		return t.init(stub, args)
+	} else if function == "delete" { //deletes an entity from its state
+		res, err := t.Delete(stub, args)
+		cleanTrades(stub) //lets make sure all open trades are still valid
+		return res, err
+	} else if function == "write" { //writes a value to the chaincode state
+		return t.Write(stub, args)
+	} else if function == "init_marble" { //create a new marble
+		return t.init_marble(stub, args)
+	} else if function == "set_user" { //change owner of a marble
+		res, err := t.set_user(stub, args)
+		cleanTrades(stub) //lets make sure all open trades are still valid
+		return res, err
 	}
-	fmt.Println("invoke did not find func: " + function)
+	fmt.Println("run did not find func: " + function) //error
 
 	return nil, errors.New("Received unknown function invocation")
 }
 
-// Query is our entry point for queries
+// ============================================================================================================================
+// Query - Our entry point for Queries
+// ============================================================================================================================
 func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("query is running " + function)
 
 	// Handle different functions
 	if function == "read" { //read a variable
 		return t.read(stub, args)
+	} else if function == "system_created" {
+		return t.read(stub, "system_created_time")
 	}
-	fmt.Println("query did not find func: " + function)
+
+	fmt.Println("query did not find func: " + function) //error
 
 	return nil, errors.New("Received unknown function query")
 }
 
-// write - invoke function to write key/value pair
-func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	var key, value string
-	var err error
-	fmt.Println("running write()")
-
-	if len(args) != 2 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the key and value to set")
-	}
-
-	key = args[0] //rename for funsies
-	value = args[1]
-	err = stub.PutState(key, []byte(value)) //write the variable into the chaincode state
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
-// read - query function to read key/value pair
+// ============================================================================================================================
+// Read - read a variable from chaincode state
+// ============================================================================================================================
 func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	var key, jsonResp string
+	var name, jsonResp string
 	var err error
 
 	if len(args) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting name of the key to query")
+		return nil, errors.New("Incorrect number of arguments. Expecting name of the var to query")
 	}
 
-	key = args[0]
-	valAsbytes, err := stub.GetState(key)
+	name = args[0]
+	valAsbytes, err := stub.GetState(name) //get the var from chaincode state
 	if err != nil {
-		jsonResp = "{\"Error\":\"Failed to get state for " + key + "\"}"
+		jsonResp = "{\"Error\":\"Failed to get state for " + name + "\"}"
 		return nil, errors.New(jsonResp)
 	}
 
-	return valAsbytes, nil
+	return valAsbytes, nil //send it onward
 }
