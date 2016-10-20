@@ -14,6 +14,8 @@ import (
 	"time"
 )
 
+const DefaultTagCreator = "UATag.system"
+
 // SimpleChaincode -> simple Chaincode implementation
 type SimpleChaincode struct {
 }
@@ -21,7 +23,8 @@ type SimpleChaincode struct {
 // declaration of Tag object
 type Tag struct {
 	Id        string `json:"id"`         //the fieldtags are needed to keep case from bouncing around
-	CreatedAt string `json:"created_at"` // creation date of tag -> when it was placed to chaincode
+	CreatedAt string `json:"created_at"` // creation date of tag -> when it was physically created
+	ChaincodedAt string `json:"chaincoded_at"` // creation date of tag -> when it was placed to chaincode	
 	Creator   string `json:"creator"`    // creator -> who created? Obiously, Uatag
 	IssuedTo  string `json:"issued_to"`  // Company name issued to
 	IssuedAt  string `json:"issued_at"`  // the date when tag was issued to company
@@ -38,7 +41,9 @@ func main() {
 	}
 }
 
-// INIT THE WHOLE NEW NETWORK CHAINCODE and test if writeable
+// ============================================================================================================================
+// Init - creates the database and tests it for usage
+// ============================================================================================================================
 func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 
 	var Aval int
@@ -80,14 +85,17 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 }
 
 // ============================================================================================================================
-// Invoke
+// Invoke - ENTRY POINT FOR ALLLLL INVOKATIONS
 // ============================================================================================================================
 func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
 
 	// Handle different functions
 	if function == "init" {
-		return t.Init(stub, "init", args)
+		//return t.Init(stub, "init", args) // init here resets all data !
+		return t.read(stub, []string{"system_created_time"})
+	} else if function == "create_tag" {
+		return t.create_tag(stub, args)
 	}
 	fmt.Println("invoke did not find func: " + function)
 
@@ -105,6 +113,8 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 		return t.read(stub, args)
 	} else if function == "system_created" {
 		return t.read(stub, []string{"system_created_time"})
+	else if function == "system_author" {
+		return t.read(stub, []string{"system_author"})
 	}
 
 	fmt.Println("query did not find func: " + function) //error
@@ -131,4 +141,79 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 	}
 
 	return valAsbytes, nil //send it onward
+}
+
+
+// ============================================================================================================================
+// 	ALL TAGS RELATES FUNCTIONS BELOW
+// ============================================================================================================================
+
+/*
+	REQ ARGS
+	1 -> Tag ID
+	2 -> Created At
+	NOT REQ ARGS
+	3 -> Creator
+	4 -> IssuedTo
+	5 -> IssuedAt
+
+*/
+func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+	
+	var err error
+	if len(args) < 2 {
+		return nil, errors.New("Incorrect number of arguments. Expecting Atleast 2")
+	}
+
+	fmt.Println("- start init tag")
+
+	if len(args[0]) <= 0 {
+		return nil, errors.New("1st argument must be a non-empty string")
+	}
+	if len(args[1]) <= 0 {
+		return nil, errors.New("2nd argument must be a non-empty string")
+	}
+	
+	_tag_Id := strings.ToUpper(args[0])
+	_tag_CreatedAt := strings.ToLower(args[1])
+	_tag_ChaincodedAt := time.Now().String()
+
+	if(args[3] != nil && len(args[3]) > 0) {
+		_tag_Creator := args[3]
+	} else {
+		_tag_Creator := DefaultTagCreator
+	}
+
+	if(args[4] != nil && len(args[4]) > 0 && args[5] != nil && len(args[5]) > 0 ) {
+		_tag_IssuedTo := args[4]
+		_tag_IssuedAt := args[5]
+	} else {
+		_tag_IssuedTo, tag_IssuedAt := "",""
+
+	}
+
+
+	str := `{"Id": "` + _tag_Id + `", "CreatedAt": "` + _tag_CreatedAt + `", "ChaincodedAt": "` + _tag_ChaincodedAt + `", "Creator": "` + _tag_Creator + `", "IssuedTo": "` + _tag_IssuedTo + `", "IssuedAt": "` + tag_IssuedAt + `"}`
+	err = stub.PutState(_tag_Id, []byte(str))								//store marble with id as key
+	if err != nil {
+		return nil, err
+	}
+
+
+	//get the tag index
+	tagsAsBytes, err := stub.GetState(tagIndexStr)
+	if err != nil {
+		return nil, errors.New("Failed to get tag index")
+	}
+	var tagIndex []string
+	json.Unmarshal(tagsAsBytes, &tagIndexStr)							//un stringify it aka JSON.parse()
+	
+	//append
+	tagIndex = append(tagIndex, _tag_Id)								//add marble name to index list
+	fmt.Println("! tag index: ", tagIndex)
+	jsonAsBytes, _ := json.Marshal(tagIndex)
+	err = stub.PutState(tagIndexStr, jsonAsBytes)						//store name of marble
+
+	fmt.Println("- end init tag")
+	return nil, nil
 }
