@@ -39,7 +39,7 @@ func main() {
 }
 
 // INIT THE WHOLE NEW NETWORK CHAINCODE and test if writeable
-func (t *SimpleChaincode) init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 
 	var Aval int
 	var err error
