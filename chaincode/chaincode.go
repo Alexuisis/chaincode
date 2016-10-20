@@ -178,13 +178,13 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 	_tag_CreatedAt := strings.ToLower(args[1])
 	_tag_ChaincodedAt := time.Now().String()
 
-	if args[3] != nil && len(args[3]) > 0 {
+	if args[3] != "" {
 		_tag_Creator := args[3]
 	} else {
 		_tag_Creator := DefaultTagCreator
 	}
 
-	if args[4] != nil && len(args[4]) > 0 && args[5] != nil && len(args[5]) > 0 {
+	if len(args[4]) > 0 && len(args[5]) > 0 {
 		_tag_IssuedTo := args[4]
 		_tag_IssuedAt := args[5]
 	} else {
