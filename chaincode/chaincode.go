@@ -22,12 +22,12 @@ type SimpleChaincode struct {
 
 // declaration of Tag object
 type Tag struct {
-	Id        string `json:"id"`         //the fieldtags are needed to keep case from bouncing around
-	CreatedAt string `json:"created_at"` // creation date of tag -> when it was physically created
-	ChaincodedAt string `json:"chaincoded_at"` // creation date of tag -> when it was placed to chaincode	
-	Creator   string `json:"creator"`    // creator -> who created? Obiously, Uatag
-	IssuedTo  string `json:"issued_to"`  // Company name issued to
-	IssuedAt  string `json:"issued_at"`  // the date when tag was issued to company
+	Id           string `json:"id"`            //the fieldtags are needed to keep case from bouncing around
+	CreatedAt    string `json:"created_at"`    // creation date of tag -> when it was physically created
+	ChaincodedAt string `json:"chaincoded_at"` // creation date of tag -> when it was placed to chaincode
+	Creator      string `json:"creator"`       // creator -> who created? Obiously, Uatag
+	IssuedTo     string `json:"issued_to"`     // Company name issued to
+	IssuedAt     string `json:"issued_at"`     // the date when tag was issued to company
 }
 
 // ALL TAGS INDEXES
@@ -113,7 +113,7 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 		return t.read(stub, args)
 	} else if function == "system_created" {
 		return t.read(stub, []string{"system_created_time"})
-	else if function == "system_author" {
+	} else if function == "system_author" {
 		return t.read(stub, []string{"system_author"})
 	}
 
@@ -143,7 +143,6 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 	return valAsbytes, nil //send it onward
 }
 
-
 // ============================================================================================================================
 // 	ALL TAGS RELATES FUNCTIONS BELOW
 // ============================================================================================================================
@@ -159,7 +158,7 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 
 */
 func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	
+
 	var err error
 	if len(args) < 2 {
 		return nil, errors.New("Incorrect number of arguments. Expecting Atleast 2")
@@ -173,32 +172,30 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 	if len(args[1]) <= 0 {
 		return nil, errors.New("2nd argument must be a non-empty string")
 	}
-	
+
 	_tag_Id := strings.ToUpper(args[0])
 	_tag_CreatedAt := strings.ToLower(args[1])
 	_tag_ChaincodedAt := time.Now().String()
 
-	if(args[3] != nil && len(args[3]) > 0) {
+	if args[3] != nil && len(args[3]) > 0 {
 		_tag_Creator := args[3]
 	} else {
 		_tag_Creator := DefaultTagCreator
 	}
 
-	if(args[4] != nil && len(args[4]) > 0 && args[5] != nil && len(args[5]) > 0 ) {
+	if args[4] != nil && len(args[4]) > 0 && args[5] != nil && len(args[5]) > 0 {
 		_tag_IssuedTo := args[4]
 		_tag_IssuedAt := args[5]
 	} else {
-		_tag_IssuedTo, tag_IssuedAt := "",""
+		_tag_IssuedTo, tag_IssuedAt := "", ""
 
 	}
 
-
 	str := `{"Id": "` + _tag_Id + `", "CreatedAt": "` + _tag_CreatedAt + `", "ChaincodedAt": "` + _tag_ChaincodedAt + `", "Creator": "` + _tag_Creator + `", "IssuedTo": "` + _tag_IssuedTo + `", "IssuedAt": "` + tag_IssuedAt + `"}`
-	err = stub.PutState(_tag_Id, []byte(str))								//store marble with id as key
+	err = stub.PutState(_tag_Id, []byte(str)) //store marble with id as key
 	if err != nil {
 		return nil, err
 	}
-
 
 	//get the tag index
 	tagsAsBytes, err := stub.GetState(tagIndexStr)
@@ -206,13 +203,13 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 		return nil, errors.New("Failed to get tag index")
 	}
 	var tagIndex []string
-	json.Unmarshal(tagsAsBytes, &tagIndexStr)							//un stringify it aka JSON.parse()
-	
+	json.Unmarshal(tagsAsBytes, &tagIndexStr) //un stringify it aka JSON.parse()
+
 	//append
-	tagIndex = append(tagIndex, _tag_Id)								//add marble name to index list
+	tagIndex = append(tagIndex, _tag_Id) //add marble name to index list
 	fmt.Println("! tag index: ", tagIndex)
 	jsonAsBytes, _ := json.Marshal(tagIndex)
-	err = stub.PutState(tagIndexStr, jsonAsBytes)						//store name of marble
+	err = stub.PutState(tagIndexStr, jsonAsBytes) //store name of marble
 
 	fmt.Println("- end init tag")
 	return nil, nil
