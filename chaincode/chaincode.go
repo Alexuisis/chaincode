@@ -163,55 +163,5 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 		return nil, err
 	}
 
-	if len(args) < 2 {
-		return nil, errors.New("Incorrect number of arguments. Expecting Atleast 2")
-	}
-
-	fmt.Println("- start init tag")
-
-	if len(args[0]) <= 0 {
-		return nil, errors.New("1st argument must be a non-empty string")
-	}
-	if len(args[1]) <= 0 {
-		return nil, errors.New("2nd argument must be a non-empty string")
-	}
-
-	_tag_Id := strings.ToUpper(args[0])
-	_tag_CreatedAt := strings.ToLower(args[1])
-	_tag_ChaincodedAt := time.Now().String()
-	_tag_Creator, _tag_IssuedTo, _tag_IssuedAt := "", "", ""
-
-	if args[3] != "" {
-		_tag_Creator = args[3]
-	} else {
-		_tag_Creator = "UATag.system"
-	}
-
-	if len(args[4]) > 0 && len(args[5]) > 0 {
-		_tag_IssuedTo = args[4]
-		_tag_IssuedAt = args[5]
-	}
-
-	str := `{"Id": "` + _tag_Id + `", "CreatedAt": "` + _tag_CreatedAt + `", "ChaincodedAt": "` + _tag_ChaincodedAt + `", "Creator": "` + _tag_Creator + `", "IssuedTo": "` + _tag_IssuedTo + `", "IssuedAt": "` + _tag_IssuedAt + `"}`
-	err = stub.PutState(_tag_Id, []byte(str)) //store marble with id as key
-	if err != nil {
-		return nil, err
-	}
-
-	//get the tag index
-	tagsAsBytes, err := stub.GetState(tagIndexStr)
-	if err != nil {
-		return nil, errors.New("Failed to get tag index")
-	}
-	var tagIndex []string
-	json.Unmarshal(tagsAsBytes, &tagIndexStr) //un stringify it aka JSON.parse()
-
-	//append
-	tagIndex = append(tagIndex, _tag_Id) //add marble name to index list
-	fmt.Println("! tag index: ", tagIndex)
-	jsonAsBytes, _ := json.Marshal(tagIndex)
-	err = stub.PutState(tagIndexStr, jsonAsBytes) //store name of marble
-
-	fmt.Println("- end init tag")
 	return nil, nil
 }
