@@ -142,14 +142,6 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 	return valAsbytes, nil //send it onward
 }
 
-func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	err := stub.PutState("abc", []byte("CBA!"))
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
-}
-
 // ============================================================================================================================
 // 	ALL TAGS RELATES FUNCTIONS BELOW
 // ============================================================================================================================
@@ -166,7 +158,11 @@ func (t *SimpleChaincode) write(stub *shim.ChaincodeStub, args []string) ([]byte
 */
 func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 
-	var err error
+	err := stub.PutState("create", []byte("CBA!"))
+	if err != nil {
+		return nil, err
+	}
+
 	if len(args) < 2 {
 		return nil, errors.New("Incorrect number of arguments. Expecting Atleast 2")
 	}
