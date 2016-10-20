@@ -73,19 +73,17 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 	return nil, nil
 }
 
-//// -------------------- OK
-
 // ============================================================================================================================
-// Run - Our entry point for Invokcations
+// Invoke
 // ============================================================================================================================
-func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
-	fmt.Println("run is running " + function)
+func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+	fmt.Println("invoke is running " + function)
 
 	// Handle different functions
-	if function == "init" { //initialize the chaincode state, used as reset
-		return t.init(stub, args)
+	if function == "init" {
+		return t.Init(stub, "init", args)
 	}
-	fmt.Println("run did not find func: " + function) //error
+	fmt.Println("invoke did not find func: " + function)
 
 	return nil, errors.New("Received unknown function invocation")
 }
