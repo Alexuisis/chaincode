@@ -70,6 +70,12 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 	if err != nil {
 		return nil, err
 	}
+
+	err = stub.PutState("system_author", []byte("Oleksandr Alex Samoilov"))
+	if err != nil {
+		return nil, err
+	}
+
 	return nil, nil
 }
 
