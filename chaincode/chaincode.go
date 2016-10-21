@@ -21,12 +21,12 @@ type SimpleChaincode struct {
 
 // declaration of Tag object
 type Tag struct {
-	Id           string `json:"id"`            //the fieldtags are needed to keep case from bouncing around
-	CreatedAt    string `json:"created_at"`    // creation date of tag -> when it was physically created
-	ChaincodedAt string `json:"chaincoded_at"` // creation date of tag -> when it was placed to chaincode
-	Creator      string `json:"creator"`       // creator -> who created? Obiously, Uatag
-	IssuedTo     string `json:"issued_to"`     // Company name issued to
-	IssuedAt     string `json:"issued_at"`     // the date when tag was issued to company
+	Id           string `json:"Id"`           //the fieldtags are needed to keep case from bouncing around
+	CreatedAt    string `json:"CreatedAt"`    // creation date of tag -> when it was physically created
+	ChaincodedAt string `json:"ChaincodedAt"` // creation date of tag -> when it was placed to chaincode
+	Creator      string `json:"Creator"`      // creator -> who created? Obiously, Uatag
+	IssuedTo     string `json:"IssuedTo"`     // Company name issued to
+	IssuedAt     string `json:"IssuedAt"`     // the date when tag was issued to company
 }
 
 // ALL TAGS INDEXES
