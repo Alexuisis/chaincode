@@ -26,7 +26,7 @@ type Tag struct {
 	ChaincodedAt time.Time `json:"ChaincodedAt"` // creation date of tag -> when it was placed to chaincode
 	Creator      string    `json:"Creator"`      // creator -> who created? Obiously, Uatag
 	IssuedTo     string    `json:"IssuedTo"`     // Company name issued to
-	IssuedAt     time.Time `json:"IssuedAt"`     // the date when tag was issued to company
+	IssuedAt     string    `json:"IssuedAt"`     // the date when tag was issued to company
 }
 
 // ALL TAGS INDEXES
