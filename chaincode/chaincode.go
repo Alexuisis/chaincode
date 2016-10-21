@@ -188,7 +188,7 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 
 	tag_Id := strings.ToUpper(args[0])
 	tag_key := "tag_" + tag_Id
-	tag_ChaincodedAt := "Chaincode time: " + time.Now().String()
+	tag_ChaincodedAt := time.Now().String()
 	tag_Creator := "UATag.system"
 
 	tag_CreatedAt, tag_IssuedTo, tag_IssuedAt := "", "", ""
@@ -246,7 +246,7 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 		}
 	}
 
-	str := `{"Id": "` + tag_Id + `", "CreatedAt": "` + tag_CreatedAt + `", "ChaincodedAt": ` + tag_ChaincodedAt + `, "Creator": "` + tag_Creator + `", "IssuedTo": "` + tag_IssuedTo + `", "IssuedAt": "` + tag_IssuedAt + `"}`
+	str := `{"Id": "` + tag_Id + `", "CreatedAt": "` + tag_CreatedAt + `", "ChaincodedAt": "` + tag_ChaincodedAt + `", "Creator": "` + tag_Creator + `", "IssuedTo": "` + tag_IssuedTo + `", "IssuedAt": "` + tag_IssuedAt + `"}`
 
 	err := stub.PutState(tag_key, []byte(str))
 	if err != nil {
