@@ -243,10 +243,26 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 
 	str := `{"Id": "` + tag_Id + `", "CreatedAt": "` + tag_CreatedAt + `", "ChaincodedAt": ` + tag_ChaincodedAt + `, "Creator": "` + tag_Creator + `", "IssuedTo": "` + tag_IssuedTo + `", "IssuedAt": "` + tag_IssuedAt + `"}`
 
-	err := stub.PutState(tag_key, []byte(str)) //store marble with id as key
+	err := stub.PutState(tag_key, []byte(str))
 	if err != nil {
 		return nil, err
 	}
+
+	//sore new tag in registry
+	tagsAsBytes, err := stub.GetState(tagIndexStr)
+	if err != nil {
+		return nil, errors.New("Failed to get tags index")
+	}
+	var tagIndex []string
+	json.Unmarshal(tagsAsBytes, &tagIndex)
+
+	//append
+	tagIndex = append(tagIndex, tag_key)
+	fmt.Println("! tag index: ", tagIndex)
+	jsonAsBytes, _ := json.Marshal(tagIndex)
+	err = stub.PutState(tagIndexStr, jsonAsBytes)
+
+	fmt.Println("- end init tag")
 
 	return nil, nil
 }
