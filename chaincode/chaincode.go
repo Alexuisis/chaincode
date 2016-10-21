@@ -80,6 +80,8 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 		return nil, err
 	}
 
+	stub.PutState("tag_LOL", []byte("non"))
+
 	return nil, nil
 }
 
@@ -92,11 +94,11 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 	// Handle different functions
 	if function == "init" { //initialize the chaincode state, used as reset
 
-		valAsbytes, err := stub.GetState("already_inited") //get the var from chaincode state
+		valAsbytes, err := stub.GetState("already_inited")
 		if err != nil {
-			return valAsbytes, nil
-		} else {
 			return t.Init(stub, function, args)
+		} else {
+			return valAsbytes, nil
 		}
 
 	} else if function == "create_tag" {
