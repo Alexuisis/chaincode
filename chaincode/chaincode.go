@@ -178,7 +178,7 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 	}
 
 	tag_Id := strings.ToUpper(args[0])
-	tag_key := "tag_" + tag_Id
+	tag_key := `tag_` + tag_Id
 	tag_CreatedAt := strings.ToLower(args[1])
 	tag_ChaincodedAt := time.Now().String()
 	tag_Creator := "1"
