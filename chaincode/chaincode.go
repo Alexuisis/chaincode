@@ -184,6 +184,12 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 
 	tag_CreatedAt, tag_IssuedTo, tag_IssuedAt := "", "", ""
 
+	if len(args) == 2 {
+		if len(args[2]) > 0 {
+			tag_CreatedAt = args[1]
+		}
+	}
+
 	if len(args) == 3 {
 		if len(args[2]) > 0 {
 			tag_Creator = args[2]
