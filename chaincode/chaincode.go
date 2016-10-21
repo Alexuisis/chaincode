@@ -164,6 +164,10 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 */
 func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 
+	if len(args) != 4 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 4")
+	}
+
 	str := `{"json": "data"}`
 	err := stub.PutState("asd", []byte(str)) //store marble with id as key
 	if err != nil {
