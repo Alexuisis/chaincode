@@ -84,7 +84,7 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 }
 
 // ============================================================================================================================
-// Invoke - ENTRY POINT FOR ALLLLL INVOKATIONS
+// Invoke - ENTRY POINT FOR ALLLLL INVOKATIONS -> THIS IS A ROUTER FOR ALL  INVOKATIONAL FUNCTIONS
 // ============================================================================================================================
 func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("invoke is running " + function)
@@ -101,6 +101,8 @@ func (t *SimpleChaincode) Invoke(stub *shim.ChaincodeStub, function string, args
 
 	} else if function == "create_tag" {
 		return t.create_tag(stub, args)
+	} else if function == "assign_to" {
+		return t.assign_to(stub, args)
 	}
 
 	fmt.Println("invoke did not find func: " + function)
