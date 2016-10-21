@@ -21,12 +21,12 @@ type SimpleChaincode struct {
 
 // declaration of Tag object
 type Tag struct {
-	Id           string    `json:"Id"`           //the fieldtags are needed to keep case from bouncing around
-	CreatedAt    string    `json:"CreatedAt"`    // creation date of tag -> when it was physically created
-	ChaincodedAt time.Time `json:"ChaincodedAt"` // creation date of tag -> when it was placed to chaincode
-	Creator      string    `json:"Creator"`      // creator -> who created? Obiously, Uatag
-	IssuedTo     string    `json:"IssuedTo"`     // Company name issued to
-	IssuedAt     string    `json:"IssuedAt"`     // the date when tag was issued to company
+	Id           string `json:"Id"`           //the fieldtags are needed to keep case from bouncing around
+	CreatedAt    string `json:"CreatedAt"`    // creation date of tag -> when it was physically created
+	ChaincodedAt string `json:"ChaincodedAt"` // creation date of tag -> when it was placed to chaincode
+	Creator      string `json:"Creator"`      // creator -> who created? Obiously, Uatag
+	IssuedTo     string `json:"IssuedTo"`     // Company name issued to
+	IssuedAt     string `json:"IssuedAt"`     // the date when tag was issued to company
 }
 
 // ALL TAGS INDEXES
@@ -188,7 +188,7 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 
 	tag_Id := strings.ToUpper(args[0])
 	tag_key := "tag_" + tag_Id
-	tag_ChaincodedAt := time.Now().String() + " "
+	tag_ChaincodedAt := "Chaincode time: " + time.Now().String()
 	tag_Creator := "UATag.system"
 
 	tag_CreatedAt, tag_IssuedTo, tag_IssuedAt := "", "", ""
