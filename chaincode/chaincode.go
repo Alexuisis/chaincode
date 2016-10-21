@@ -83,6 +83,8 @@ func (t *SimpleChaincode) Init(stub *shim.ChaincodeStub, function string, args [
 	return nil, nil
 }
 
+/// ghcfghgfy
+
 // ============================================================================================================================
 // Invoke - ENTRY POINT FOR ALLLLL INVOKATIONS -> THIS IS A ROUTER FOR ALL  INVOKATIONAL FUNCTIONS
 // ============================================================================================================================
