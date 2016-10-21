@@ -164,15 +164,26 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 */
 func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 
-	if len(args) != 4 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 4")
+	if len(args) < 2 {
+		return nil, errors.New("Incorrect number of arguments. Expecting  Atleast 2")
 	}
 
-	str := `{"json": "data"}`
-	err := stub.PutState("asd", []byte(str)) //store marble with id as key
-	if err != nil {
-		return nil, err
+	fmt.Println("- start tag marble")
+	if len(args[0]) <= 0 {
+		return nil, errors.New("1st argument must be a non-empty string")
 	}
+	if len(args[1]) <= 0 {
+		return nil, errors.New("2nd argument must be a non-empty string")
+	}
+
+	tag_Id := strings.ToLower(args[0])
+	tag_CreatedAt := strings.ToLower(args[1])
+	tag_ChaincodedAt := time.Now().String()
+	tag_Creator := ""
+	tag_IssuedTo := ""
+	tag_IssuedAt := ""
+
+	str := `{"Id": "` + tag_Id + `", "CreatedAt": "` + tag_CreatedAt + `", "ChaincodedAt": ` + tag_ChaincodedAt + `, "Creator": "` + tag_Creator + `", "IssuedTo": "` + tag_IssuedTo + `", "IssuedAt": "` + tag_IssuedAt + `"}`
 
 	err = stub.PutState(args[0], []byte(str)) //store marble with id as key
 	if err != nil {
