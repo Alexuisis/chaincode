@@ -186,7 +186,7 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 
 	str := `{"Id": "` + tag_Id + `", "CreatedAt": "` + tag_CreatedAt + `", "ChaincodedAt": ` + tag_ChaincodedAt + `, "Creator": "` + tag_Creator + `", "IssuedTo": "` + tag_IssuedTo + `", "IssuedAt": "` + tag_IssuedAt + `"}`
 
-	err = stub.PutState(args[0], []byte(str)) //store marble with id as key
+	err := stub.PutState(args[0], []byte(str)) //store marble with id as key
 	if err != nil {
 		return nil, err
 	}
