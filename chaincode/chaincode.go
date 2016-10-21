@@ -21,12 +21,12 @@ type SimpleChaincode struct {
 
 // declaration of Tag object
 type Tag struct {
-	Id           *string
-	CreatedAt    *string
-	ChaincodedAt *string
-	Creator      *string
-	IssuedTo     *string
-	IssuedAt     *string
+	Id           string
+	CreatedAt    string
+	ChaincodedAt string
+	Creator      string
+	IssuedTo     string
+	IssuedAt     string
 }
 
 // ALL TAGS INDEXES
