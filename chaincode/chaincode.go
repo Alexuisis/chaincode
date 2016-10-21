@@ -249,8 +249,8 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 	}
 
 	//sore new tag in registry
-	tagsAsBytes, err := stub.GetState(tagIndexStr)
-	if err != nil {
+	tagsAsBytes, errIndex := stub.GetState(tagIndexStr)
+	if errIndex != nil {
 		return nil, errors.New("Failed to get tags index")
 	}
 	var tagIndex []string
