@@ -288,19 +288,14 @@ func (t *SimpleChaincode) assign_to(stub *shim.ChaincodeStub, args []string) ([]
 		return nil, errors.New("Failed to get tag")
 	}
 
-	//debug
-	//dbg, _ := json.Marshal(res)
-	stub.PutState(tag_key+"_dbg", tagAsBytes)
-	//end debug
-
 	res := Tag{}
 	json.Unmarshal(tagAsBytes, &res) //un stringify it aka JSON.parse()
 
-	res.IssuedTo = args[1] //change the assigned to
-	res.IssuedAt = args[2] //change the assigned date
+	res.IssuedTo = string(args[1]) //change the assigned to
+	res.IssuedAt = string(args[2]) //change the assigned date
 
 	jsonAsBytes, _ := json.Marshal(res)
-	err = stub.PutState(tag_key, jsonAsBytes) //rewrite the marble with id as key
+	err = stub.PutState(tag_key, jsonAsBytes)
 	if err != nil {
 		return nil, err
 	}
