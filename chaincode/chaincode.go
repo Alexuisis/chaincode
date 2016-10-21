@@ -165,6 +165,11 @@ func (t *SimpleChaincode) read(stub *shim.ChaincodeStub, args []string) ([]byte,
 */
 func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 
+	err := stub.PutState("c1", []byte("1"))
+	if err != nil {
+		return nil, err
+	}
+
 	if len(args) < 2 {
 		return nil, errors.New("Incorrect number of arguments. Expecting  Atleast 2")
 	}
@@ -177,6 +182,11 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 		return nil, errors.New("2nd argument must be a non-empty string")
 	}
 
+	err = stub.PutState("c2", []byte("2"))
+	if err != nil {
+		return nil, err
+	}
+
 	tag_Id := strings.ToLower(args[0])
 	tag_CreatedAt := strings.ToLower(args[1])
 	tag_ChaincodedAt := time.Now().String()
@@ -184,9 +194,24 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 	tag_IssuedTo := ""
 	tag_IssuedAt := ""
 
+	err = stub.PutState("c3", []byte("3"))
+	if err != nil {
+		return nil, err
+	}
+
 	str := `{"Id": "` + tag_Id + `", "CreatedAt": "` + tag_CreatedAt + `", "ChaincodedAt": ` + tag_ChaincodedAt + `, "Creator": "` + tag_Creator + `", "IssuedTo": "` + tag_IssuedTo + `", "IssuedAt": "` + tag_IssuedAt + `"}`
 
-	err := stub.PutState(args[0], []byte(str)) //store marble with id as key
+	err = stub.PutState("c4", []byte("4"))
+	if err != nil {
+		return nil, err
+	}
+
+	err = stub.PutState(tag_Id, []byte(str)) //store marble with id as key
+	if err != nil {
+		return nil, err
+	}
+
+	err = stub.PutState("c5", []byte("5"))
 	if err != nil {
 		return nil, err
 	}
