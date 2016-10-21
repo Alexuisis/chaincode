@@ -190,9 +190,9 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 	tag_Id := strings.ToLower(args[0])
 	tag_CreatedAt := strings.ToLower(args[1])
 	tag_ChaincodedAt := time.Now().String()
-	tag_Creator := ""
-	tag_IssuedTo := ""
-	tag_IssuedAt := ""
+	tag_Creator := "1"
+	tag_IssuedTo := "2"
+	tag_IssuedAt := "3"
 
 	err = stub.PutState("c3", []byte("3"))
 	if err != nil {
