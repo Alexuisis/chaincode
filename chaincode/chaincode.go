@@ -288,13 +288,13 @@ func (t *SimpleChaincode) assign_to(stub *shim.ChaincodeStub, args []string) ([]
 		return nil, errors.New("Failed to get tag")
 	}
 
-	res := Tag{}
-	json.Unmarshal(tagAsBytes, &res) //un stringify it aka JSON.parse()
+	_tag_Obj := Tag{}
+	json.Unmarshal(tagAsBytes, &_tag_Obj) //un stringify it aka JSON.parse()
 
-	res.IssuedTo = string(args[1]) //change the assigned to
-	res.IssuedAt = string(args[2]) //change the assigned date
+	_tag_Obj.IssuedTo = string(args[1]) //change the assigned to
+	_tag_Obj.IssuedAt = string(args[2]) //change the assigned date
 
-	jsonAsBytes, _ := json.Marshal(res)
+	jsonAsBytes, _ := json.Marshal(_tag_Obj)
 	err = stub.PutState(tag_key, jsonAsBytes)
 	if err != nil {
 		return nil, err
