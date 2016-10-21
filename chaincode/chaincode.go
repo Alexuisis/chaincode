@@ -177,7 +177,8 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 		return nil, errors.New("2nd argument must be a non-empty string")
 	}
 
-	tag_Id := strings.ToLower(args[0])
+	tag_Id := strings.ToUpper(args[0])
+	tag_key := `"tag_"` + tag_Id
 	tag_CreatedAt := strings.ToLower(args[1])
 	tag_ChaincodedAt := time.Now().String()
 	tag_Creator := "1"
@@ -186,7 +187,7 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 
 	str := `{"Id": "` + tag_Id + `", "CreatedAt": "` + tag_CreatedAt + `", "ChaincodedAt": ` + tag_ChaincodedAt + `, "Creator": "` + tag_Creator + `", "IssuedTo": "` + tag_IssuedTo + `", "IssuedAt": "` + tag_IssuedAt + `"}`
 
-	err := stub.PutState(tag_Id, []byte(str)) //store marble with id as key
+	err := stub.PutState(tag_key, []byte(str)) //store marble with id as key
 	if err != nil {
 		return nil, err
 	}
