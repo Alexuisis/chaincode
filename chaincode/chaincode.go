@@ -230,10 +230,5 @@ func (t *SimpleChaincode) create_tago(stub *shim.ChaincodeStub, args []string) (
 		return nil, err
 	}
 
-	err = stub.PutState(args[0], []byte(str)) //store marble with id as key
-	if err != nil {
-		return nil, err
-	}
-
 	return nil, nil
 }
