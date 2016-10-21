@@ -184,16 +184,22 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 
 	tag_CreatedAt, tag_IssuedTo, tag_IssuedAt := "", "", ""
 
-	if len(args[2]) > 0 {
-		tag_Creator = args[2]
+	if len(args) == 3 {
+		if len(args[2]) > 0 {
+			tag_Creator = args[2]
+		}
 	}
 
-	if len(args[3]) > 0 {
-		tag_IssuedTo = args[3]
+	if len(args) == 4 {
+		if len(args[3]) > 0 {
+			tag_IssuedTo = args[3]
+		}
 	}
 
-	if len(args[4]) > 0 {
-		tag_IssuedAt = args[4]
+	if len(args) == 5 {
+		if len(args[4]) > 0 {
+			tag_IssuedAt = args[4]
+		}
 	}
 
 	str := `{"Id": "` + tag_Id + `", "CreatedAt": "` + tag_CreatedAt + `", "ChaincodedAt": ` + tag_ChaincodedAt + `, "Creator": "` + tag_Creator + `", "IssuedTo": "` + tag_IssuedTo + `", "IssuedAt": "` + tag_IssuedAt + `"}`
