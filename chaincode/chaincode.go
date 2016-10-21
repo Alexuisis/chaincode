@@ -192,9 +192,11 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 	tag_CreatedAt, tag_IssuedTo, tag_IssuedAt := "", "", ""
 
 	if len(args) == 2 {
+
 		if len(args[1]) > 0 {
 			tag_CreatedAt = args[1]
 		}
+
 	}
 
 	if len(args) == 3 {
@@ -224,6 +226,7 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 	}
 
 	if len(args) == 5 {
+
 		if len(args[1]) > 0 {
 			tag_CreatedAt = args[1]
 		}
@@ -263,6 +266,35 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 	err = stub.PutState(tagIndexStr, jsonAsBytes)
 
 	fmt.Println("- end init tag")
+
+	return nil, nil
+}
+
+func (t *SimpleChaincode) assign_to(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+	var err error
+
+	//   0       1            2
+	// "tag_id", "assign_to", "assign_date"
+	if len(args) < 3 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 3")
+	}
+
+	tag_Id := "tag_" + args[0]
+
+	tagAsBytes, err := stub.GetState(tag_Id)
+	if err != nil {
+		return nil, errors.New("Failed to get tag")
+	}
+	res := Tag{}
+	json.Unmarshal(tagAsBytes, &res) //un stringify it aka JSON.parse()
+	res.IssuedTo = args[1]           //change the assigned to
+	res.IssuedAt = args[2]           //change the assigned date
+
+	jsonAsBytes, _ := json.Marshal(res)
+	err = stub.PutState(tag_Id, jsonAsBytes) //rewrite the marble with id as key
+	if err != nil {
+		return nil, err
+	}
 
 	return nil, nil
 }
