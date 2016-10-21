@@ -273,7 +273,6 @@ func (t *SimpleChaincode) create_tag(stub *shim.ChaincodeStub, args []string) ([
 }
 
 func (t *SimpleChaincode) assign_to(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	var err error
 
 	//   0       1            2
 	// "tag_id", "assign_to", "assign_date"
@@ -288,7 +287,7 @@ func (t *SimpleChaincode) assign_to(stub *shim.ChaincodeStub, args []string) ([]
 		return nil, errors.New("Failed to get tag")
 	}
 
-	var _tag_Obj Tag
+	_tag_Obj := Tag{}
 
 	json.Unmarshal(tagAsBytes, &_tag_Obj) //un stringify it aka JSON.parse()
 
